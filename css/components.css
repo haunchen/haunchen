@@ -1,0 +1,217 @@
+/* Component Styles */
+
+/* Card */
+.card {
+  background-color: rgba(55, 65, 81, 0.3);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(251, 146, 60, 0.3);
+}
+
+.card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.card-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-accent);
+  margin-bottom: var(--spacing-md);
+}
+
+.card-content {
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: linear-gradient(to right, rgba(249, 115, 22, 0.2), rgba(234, 88, 12, 0.2));
+  color: var(--text-accent);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--color-orange-400);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-orange-500);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Avatar */
+.avatar {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 4px solid var(--border-accent);
+  margin-bottom: var(--spacing-lg);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(55, 65, 81, 0.5);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+}
+
+.social-link:hover {
+  background-color: var(--color-orange-400);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.social-link svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.tag {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: rgba(251, 146, 60, 0.1);
+  color: var(--text-accent);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+/* List */
+.list-disc {
+  list-style: disc;
+  padding-left: var(--spacing-lg);
+  color: var(--text-secondary);
+}
+
+.list-disc li {
+  margin-bottom: var(--spacing-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Role Badges */
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.role {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: rgba(156, 163, 175, 0.2);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  border-top: 1px solid var(--border-primary);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-orange-400);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: 40;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background-color: var(--color-orange-500);
+  transform: translateY(-4px);
+}
+
+.back-to-top svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Link Hover Effect */
+.link-underline {
+  position: relative;
+  transition: color var(--transition-base);
+}
+
+.link-underline:hover {
+  color: var(--text-accent);
+}
