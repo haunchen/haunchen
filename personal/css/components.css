@@ -2,7 +2,7 @@
 
 /* Card */
 .card {
-  background-color: rgba(55, 65, 81, 0.3);
+  background-color: rgba(21, 32, 48, 0.3);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
@@ -59,7 +59,7 @@
 
 .btn-primary {
   background-color: var(--color-orange-400);
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .btn-primary:hover {
@@ -98,7 +98,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  background-color: rgba(55, 65, 81, 0.5);
+  background-color: rgba(21, 32, 48, 0.5);
   border-radius: var(--radius-full);
   transition: all var(--transition-base);
 }

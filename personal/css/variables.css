@@ -1,24 +1,33 @@
 /* CSS Variables */
 :root {
-  /* Colors */
-  --color-gray-900: #111827;
-  --color-gray-800: #1f2937;
-  --color-gray-700: #374151;
-  --color-gray-600: #4b5563;
+  /* Colors - WordPress Theme */
+  /* 主色系 */
+  --color-primary: #0f172a;      /* 主色 */
+  --color-secondary-1: #212a37;  /* 副色1 */
+  --color-secondary-2: #222222;  /* 副色2 */
+  --color-secondary-3: #152030;  /* 副色3 */
+  --color-border: #4f5b62;       /* 框线 */
+
+  /* 跳色系 */
+  --color-blue-500: #0084ff;     /* 跳色1 */
+  --color-blue-600: #0177e3;     /* 跳色2 */
+
+  /* 保留橙色系 */
+  --color-orange-600: #ea580c;
+  --color-orange-500: #f97316;
+  --color-orange-400: #fb923c;   /* 跳色3 */
+  --color-orange-300: #fdba74;
+
+  /* 通用色 */
   --color-gray-400: #9ca3af;
   --color-gray-300: #d1d5db;
   --color-gray-200: #e5e7eb;
   --color-white: #ffffff;
 
-  --color-orange-600: #ea580c;
-  --color-orange-500: #f97316;
-  --color-orange-400: #fb923c;
-  --color-orange-300: #fdba74;
-
   /* Background */
-  --bg-primary: var(--color-gray-900);
-  --bg-secondary: var(--color-gray-800);
-  --bg-nav: rgba(17, 24, 39, 0.95);
+  --bg-primary: var(--color-primary);
+  --bg-secondary: var(--color-secondary-1);
+  --bg-nav: rgba(15, 23, 42, 0.95);
 
   /* Text Colors */
   --text-primary: var(--color-white);
@@ -27,7 +36,7 @@
   --text-accent: var(--color-orange-400);
 
   /* Border */
-  --border-primary: var(--color-gray-800);
+  --border-primary: var(--color-border);
   --border-accent: var(--color-orange-400);
 
   /* Spacing */
