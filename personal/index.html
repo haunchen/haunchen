@@ -44,6 +44,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/terminal.css">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -114,9 +115,24 @@
           <span style="color: var(--text-primary);">Frank</span>
           <span style="color: var(--text-accent);">Chen</span>
         </h1>
-        <p style="font-size: var(--font-size-xl); color: var(--text-secondary); margin-bottom: var(--spacing-xl); max-width: 48rem; margin-left: auto; margin-right: auto;">
-          系統整合工程師 | 技術愛好者
-        </p>
+
+        <!-- Terminal -->
+        <div class="terminal-container">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+            </div>
+            <div class="terminal-title">frankchentw@terminal ~ %</div>
+          </div>
+          <div class="terminal-output" id="terminal-output"></div>
+          <div class="input-line">
+            <span class="prompt">$ frank</span>
+            <input type="text" id="command-input" autofocus autocomplete="off" placeholder="輸入 help 查看指令">
+            <span class="cursor"></span>
+          </div>
+        </div>
 
         <!-- Social Links -->
         <div class="social-links">
@@ -474,6 +490,7 @@
   <script src="js/utils.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/animations.js"></script>
+  <script src="js/terminal.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
