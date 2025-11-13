@@ -1,0 +1,86 @@
+name: Validate Posts Data
+
+on:
+  pull_request:
+    paths:
+      - 'personal/data/posts.js'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create validation script
+        run: |
+          cat > validate.mjs << 'EOF'
+          import { postsData } from './personal/data/posts.js';
+
+          // 驗證 1: JS 語法正確性（能成功 import 就代表語法正確）
+          console.log('✓ JS 語法正確');
+
+          // 驗證 2: 資料結構完整性
+          if (!postsData || !postsData.posts || !Array.isArray(postsData.posts)) {
+            throw new Error('資料結構錯誤：缺少 postsData.posts 陣列');
+          }
+          console.log('✓ 資料結構完整');
+
+          // 驗證 3: 每篇文章的必要欄位
+          const requiredFields = ['id', 'title', 'slug', 'published', 'url'];
+          postsData.posts.forEach((post, index) => {
+            requiredFields.forEach(field => {
+              if (!post[field]) {
+                throw new Error(`文章 ${index} 缺少必要欄位: ${field}`);
+              }
+            });
+          });
+          console.log('✓ 所有文章包含必要欄位');
+
+          // 驗證 4: 日期格式正確性 (YYYY-MM-DD)
+          const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+          postsData.posts.forEach((post, index) => {
+            if (!dateRegex.test(post.published)) {
+              throw new Error(`文章 ${index} 日期格式錯誤: ${post.published}`);
+            }
+          });
+          console.log('✓ 日期格式正確');
+
+          // 驗證 5: URL 格式正確性
+          const urlRegex = /^https?:\/\/.+/;
+          postsData.posts.forEach((post, index) => {
+            if (!urlRegex.test(post.url)) {
+              throw new Error(`文章 ${index} URL 格式錯誤: ${post.url}`);
+            }
+          });
+          console.log('✓ URL 格式正確');
+
+          // 驗證 6: 排序正確性（降序）
+          for (let i = 1; i < postsData.posts.length; i++) {
+            if (postsData.posts[i].published > postsData.posts[i-1].published) {
+              throw new Error(`排序錯誤：文章 ${i} 的日期比前一篇新`);
+            }
+          }
+          console.log('✓ 文章按日期降序排列');
+
+          console.log('\n所有驗證通過！');
+          EOF
+
+      - name: Run validation
+        run: node validate.mjs
+
+      - name: Enable auto-merge
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge ${{ github.event.pull_request.number }} --auto --squash --delete-branch

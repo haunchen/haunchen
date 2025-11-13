@@ -108,6 +108,10 @@
     font-weight: bold;
 }
 
+.prompt.waiting-confirmation {
+    color: #f59e0b;
+}
+
 .input-line {
     display: flex;
     align-items: center;
