@@ -42,10 +42,17 @@ class TerminalEmulator {
         // 監聽輸入事件，實作單字元自動執行
         this.input.addEventListener('input', (e) => {
             if (this.pendingAction && e.target.value.length === 1) {
-                // 等待確認狀態下，輸入單個字元後自動觸發 Enter
+                // 等待確認狀態下，輸入單個字元後自動執行
                 setTimeout(() => {
-                    const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-                    this.input.dispatchEvent(enterEvent);
+                    const command = this.input.value.trim();
+                    if (command) {
+                        // 顯示輸入的指令
+                        this.addCommand(`$ frank ${this.input.value}`);
+                        // 處理確認
+                        this.handleConfirmation(command.toLowerCase());
+                    }
+                    this.input.value = '';
+                    this.scrollToBottom();
                 }, 200); // 200ms 延遲讓使用者看到輸入
             }
         });
@@ -72,7 +79,7 @@ class TerminalEmulator {
 
             if (command) {
                 // 顯示輸入的指令
-                this.addOutput(`$ frank ${this.input.value}`, 'command');
+                this.addCommand(`$ frank ${this.input.value}`);
 
                 // 如果有等待確認的動作
                 if (this.pendingAction) {
@@ -152,28 +159,41 @@ class TerminalEmulator {
         this.output.appendChild(div);
     }
 
+    addCommand(text) {
+        const div = document.createElement('div');
+        div.className = 'command';
+        div.textContent = text;
+        this.output.appendChild(div);
+    }
+
     scrollToBottom() {
         this.output.scrollTop = this.output.scrollHeight;
     }
 
     handleConfirmation(input) {
-        if (!this.pendingAction) return;
+        if (!this.pendingAction) {
+            return;
+        }
 
         if (input === 'y' || input === 'yes') {
             this.addOutput('確認開啟文章... <span class="success">✓</span>', 'output');
+            // 在清除 pendingAction 前先儲存 URL
+            const urlToOpen = this.pendingAction.url;
+            this.pendingAction = null;
+            this.resetNormalMode();
+
             setTimeout(() => {
-                window.open(this.pendingAction.url, '_blank');
-            }, 300);
+                window.open(urlToOpen, '_blank');
+            }, 100);
         } else if (input === 'n' || input === 'no') {
-            this.addOutput('<span style="color: rgba(255,255,255,0.6);">已取消開啟</span>', 'output');
+            this.addOutput('<span class="terminal-text-muted">已取消開啟</span>', 'output');
+            // 清除等待狀態並恢復正常模式
+            this.pendingAction = null;
+            this.resetNormalMode();
         } else {
             this.addOutput('<span class="error">請輸入 Y 或 n</span>', 'output');
             return; // 不清除 pendingAction，繼續等待輸入
         }
-
-        // 清除等待狀態並恢復正常模式
-        this.pendingAction = null;
-        this.resetNormalMode();
     }
 
     setConfirmationMode(question) {
@@ -209,13 +229,15 @@ class TerminalEmulator {
         const partialSlug = parts[1] || '';
 
         // 從 postsData 篩選匹配的 slug，限制最新 10 篇
+        // 註：postsData.posts 已按 WordPress ID 降序排列（ID 越大越新）
+        // 因此 slice(0, 10) 取得的就是最新 10 篇文章
         const matchingSlugs = postsData.posts
             .slice(0, 10) // 只取前 10 篇（最新的）
             .map(post => post.slug)
             .filter(slug => slug.startsWith(partialSlug));
 
         if (matchingSlugs.length === 0) {
-            this.addOutput('<span style="color: rgba(255,255,255,0.6);">沒有匹配的文章</span>', 'output');
+            this.addOutput('<span class="terminal-text-muted">沒有匹配的文章</span>', 'output');
             this.scrollToBottom();
         } else if (matchingSlugs.length === 1) {
             // 只有一個匹配項，自動補全到輸入框
@@ -233,7 +255,7 @@ class TerminalEmulator {
         const columnWidth = maxLength + 4; // 加上間距
         const itemsPerRow = Math.floor(70 / columnWidth) || 2; // 根據終端機寬度計算
 
-        let output = '<div style="margin-top: 0.5rem; font-family: \'Courier New\', monospace; white-space: pre; line-height: 1.8;">';
+        let output = '<div class="terminal-section-title">';
 
         for (let i = 0; i < items.length; i++) {
             // 填充空格使每個項目等寬
@@ -277,7 +299,7 @@ class TerminalEmulator {
 
     showAbout() {
         const aboutText = `<div class="highlight">關於我</div>
-<div style="margin-top: 0.5rem;">
+<div class="terminal-list-item">
 嗨！我是 Haunchen，一名系統整合工程師與技術愛好者。<br>
 熱衷於探索新技術、自動化流程，以及打造有趣的專案。<br>
 喜歡透過程式碼解決問題，並分享學習心得。
@@ -287,7 +309,7 @@ class TerminalEmulator {
 
     showSkills() {
         const skillsText = `<div class="highlight">技能標籤</div>
-<div style="margin-top: 0.5rem;">
+<div class="terminal-list-item">
 <span class="success">▪</span> Python · JavaScript · HTML/CSS<br>
 <span class="success">▪</span> Docker · Git · Linux<br>
 <span class="success">▪</span> 系統整合 · 自動化 · API 開發<br>
@@ -298,9 +320,9 @@ class TerminalEmulator {
 
     showExperience() {
         const expText = `<div class="highlight">工作經歷</div>
-<div style="margin-top: 0.5rem;">
+<div class="terminal-list-item">
 <div><span class="success">▪</span> 系統整合工程師</div>
-<div style="color: rgba(255,255,255,0.6);">
+<div class="terminal-text-muted">
 負責系統整合、自動化流程開發與維護
 </div>
 </div>`;
@@ -309,49 +331,41 @@ class TerminalEmulator {
 
     showProjects() {
         const projectsText = `<div class="highlight">專案作品</div>
-<div style="margin-top: 0.5rem;">
+<div class="terminal-list-item">
 請向下滾動查看完整的專案作品集 ↓<br>
 或輸入 <span class="highlight">blog</span> 查看更多技術文章
 </div>`;
         this.addOutput(projectsText, 'output');
 
         // 滾動到專案區
-        setTimeout(() => {
-            const projectsSection = document.querySelector('#portfolio');
-            if (projectsSection) {
-                projectsSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 500);
+        const projectsSection = document.querySelector('#portfolio');
+        if (projectsSection) {
+            projectsSection.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     showContact() {
         const contactText = `<div class="highlight">聯絡資訊</div>
-<div style="margin-top: 0.5rem;">
+<div class="terminal-list-item">
 正在導航到聯絡區域... <span class="success">✓</span>
 </div>`;
         this.addOutput(contactText, 'output');
 
         // 滾動到聯絡區
-        setTimeout(() => {
-            const contactSection = document.querySelector('#contact');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 500);
+        const contactSection = document.querySelector('#contact');
+        if (contactSection) {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     openBlog() {
         this.addOutput('正在前往部落格... <span class="success">✓</span>', 'output');
-        setTimeout(() => {
-            window.open('https://www.haunchen.tw', '_blank');
-        }, 500);
+        window.open('https://www.haunchen.tw', '_blank');
     }
 
     openGithub() {
         this.addOutput('正在前往 GitHub... <span class="success">✓</span>', 'output');
-        setTimeout(() => {
-            window.open('https://github.com/haunchen', '_blank');
-        }, 500);
+        window.open('https://github.com/haunchen', '_blank');
     }
 
     clearScreen() {
@@ -380,12 +394,14 @@ class TerminalEmulator {
 
         // 顯示標題
         this.addOutput(`<div class="highlight">部落格文章列表 (第 ${page}/${totalPages} 頁，共 ${totalPosts} 篇)</div>`, 'output');
-        this.addOutput('<div style="margin-top: 0.5rem;">', 'output');
+        this.addOutput('<div class="terminal-list-item">', 'output');
 
         // 顯示文章列表
+        // 註：postsData.posts 已按 WordPress ID 降序排列（ID 越大越新）
+        // 因此編號 1 對應陣列索引 0（最新文章）
         postsToShow.forEach((post, index) => {
             const globalIndex = startIndex + index + 1;
-            const postLine = `<div><span class="highlight">[${globalIndex}]</span> ${post.title} - ${post.slug} <span style="color: rgba(255,255,255,0.5);">(${post.published})</span></div>`;
+            const postLine = `<div><span class="highlight">[${globalIndex}]</span> ${post.title} - ${post.slug} <span class="terminal-text-dim">(${post.published})</span></div>`;
             this.addOutput(postLine, 'output');
         });
 
@@ -393,7 +409,7 @@ class TerminalEmulator {
 
         // 顯示導航提示
         if (totalPages > 1) {
-            let navText = '<div style="margin-top: 0.5rem; color: rgba(255,255,255,0.6);">';
+            let navText = '<div class="terminal-list-item terminal-text-muted">';
             if (page > 1) {
                 navText += `上一頁: <span class="highlight">posts ${page - 1}</span>`;
             }
@@ -405,7 +421,7 @@ class TerminalEmulator {
             this.addOutput(navText, 'output');
         }
 
-        this.addOutput('<div style="margin-top: 0.5rem; color: rgba(255,255,255,0.6);">輸入 <span class="highlight">open [編號]</span> 或直接輸入 <span class="highlight">[編號]</span> 開啟文章</div>', 'output');
+        this.addOutput('<div class="terminal-list-item terminal-text-muted">輸入 <span class="highlight">open [編號]</span> 或直接輸入 <span class="highlight">[編號]</span> 開啟文章</div>', 'output');
 
         this.currentPage = page;
     }
@@ -422,12 +438,14 @@ class TerminalEmulator {
             return;
         }
 
+        // 註：postsData.posts 已按 WordPress ID 降序排列
+        // 編號 1 = 陣列索引 0 = ID 最大（最新文章）
         const post = postsData.posts[index - 1];
         this.addOutput(`正在開啟文章 [${index}] ${post.title}... <span class="success">✓</span>`, 'output');
 
         setTimeout(() => {
             window.open(post.url, '_blank');
-        }, 500);
+        }, 100);
     }
 
     openPostBySlug(slug) {
@@ -446,9 +464,9 @@ class TerminalEmulator {
 
         // 顯示文章資訊
         this.addOutput(`<div class="highlight">找到文章：</div>`, 'output');
-        this.addOutput(`<div style="margin-top: 0.5rem;">標題: ${post.title}</div>`, 'output');
+        this.addOutput(`<div class="terminal-list-item">標題: ${post.title}</div>`, 'output');
         this.addOutput(`<div>發布日期: ${post.published}</div>`, 'output');
-        this.addOutput(`<div>連結: <span style="color: rgba(251,146,60,0.7);">${post.url}</span></div>`, 'output');
+        this.addOutput(`<div>連結: <span class="terminal-link">${post.url}</span></div>`, 'output');
 
         // 設定等待確認狀態
         this.pendingAction = {
