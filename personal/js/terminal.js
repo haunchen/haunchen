@@ -4,6 +4,7 @@
  */
 
 import { postsData } from '../data/posts.js';
+import { pagesData } from '../data/pages.js';
 
 class TerminalEmulator {
     constructor(outputElement, inputElement) {
@@ -30,7 +31,8 @@ class TerminalEmulator {
             'blog': this.openBlog.bind(this),
             'github': this.openGithub.bind(this),
             'clear': this.clearScreen.bind(this),
-            'welcome': this.showWelcome.bind(this)
+            'welcome': this.showWelcome.bind(this),
+            'pages': this.showPages.bind(this)
         };
 
         this.init();
@@ -134,6 +136,20 @@ class TerminalEmulator {
             return;
         }
 
+        // 處理 pages 指令
+        if (mainCommand === 'pages') {
+            const page = args[0] ? parseInt(args[0]) : 1;
+            this.showPages(page);
+            return;
+        }
+
+        // 處理 page [slug] 指令
+        if (mainCommand === 'page' && args.length > 0) {
+            const slug = args[0];
+            this.openPageBySlug(slug);
+            return;
+        }
+
         // 處理 open 指令或直接輸入數字
         if (mainCommand === 'open' || !isNaN(mainCommand)) {
             const postIndex = mainCommand === 'open' ? parseInt(args[0]) : parseInt(mainCommand);
@@ -220,28 +236,36 @@ class TerminalEmulator {
         const input = this.input.value.trim();
         const parts = input.split(' ');
 
-        // 只處理 post 指令的補全
-        if (parts[0] !== 'post') {
+        // 只處理 post 和 page 指令的補全
+        if (parts[0] !== 'post' && parts[0] !== 'page') {
             return;
         }
 
+        const commandType = parts[0];
         // 取得部分輸入的 slug
         const partialSlug = parts[1] || '';
 
-        // 從 postsData 篩選匹配的 slug，限制最新 10 篇
-        // 註：postsData.posts 已按 WordPress ID 降序排列（ID 越大越新）
-        // 因此 slice(0, 10) 取得的就是最新 10 篇文章
-        const matchingSlugs = postsData.posts
-            .slice(0, 10) // 只取前 10 篇（最新的）
-            .map(post => post.slug)
-            .filter(slug => slug.startsWith(partialSlug));
+        let matchingSlugs = [];
+
+        if (commandType === 'post') {
+            // 從 postsData 篩選匹配的 slug，限制最新 10 篇
+            matchingSlugs = postsData.posts
+                .slice(0, 10) // 只取前 10 篇（最新的）
+                .map(post => post.slug)
+                .filter(slug => slug.startsWith(partialSlug));
+        } else if (commandType === 'page') {
+            // 從 pagesData 篩選匹配的 slug
+            matchingSlugs = pagesData.pages
+                .map(page => page.slug)
+                .filter(slug => slug.startsWith(partialSlug));
+        }
 
         if (matchingSlugs.length === 0) {
             this.addOutput('<span class="terminal-text-muted">沒有匹配的文章</span>', 'output');
             this.scrollToBottom();
         } else if (matchingSlugs.length === 1) {
             // 只有一個匹配項，自動補全到輸入框
-            this.input.value = `post ${matchingSlugs[0]}`;
+            this.input.value = `${commandType} ${matchingSlugs[0]}`;
         } else {
             // 多個匹配項，顯示列表
             this.showCompletionList(matchingSlugs);
@@ -293,6 +317,8 @@ class TerminalEmulator {
 <div><span class="highlight">blog</span>       - 前往部落格</div>
 <div><span class="highlight">github</span>     - 前往 GitHub</div>
 <div><span class="highlight">clear</span>      - 清除畫面</div>
+<div><span class="highlight">pages</span>      - 顯示頁面列表</div>
+<div><span class="highlight">page [slug]</span>  - 用 slug 開啟頁面</div>
 </div>`;
         this.addOutput(helpText, 'output');
     }
@@ -476,6 +502,105 @@ class TerminalEmulator {
 
         // 切換到確認模式
         this.setConfirmationMode(`是否開啟「${post.title}」？`);
+    }
+
+    showPages(page = 1) {
+        if (!pagesData || !pagesData.pages || pagesData.pages.length === 0) {
+            this.addOutput('目前沒有頁面', 'error');
+            return;
+        }
+
+        const totalPagesCount = pagesData.pages.length;
+        const totalPages = Math.ceil(totalPagesCount / this.postsPerPage);
+
+        // 驗證頁碼
+        if (page < 1 || page > totalPages) {
+            this.addOutput(`頁碼超出範圍。共有 ${totalPages} 頁`, 'error');
+            return;
+        }
+
+        const startIndex = (page - 1) * this.postsPerPage;
+        const endIndex = Math.min(startIndex + this.postsPerPage, totalPagesCount);
+        const pagesToShow = pagesData.pages.slice(startIndex, endIndex);
+
+        // 顯示標題
+        this.addOutput(`<div class="highlight">頁面列表 (第 ${page}/${totalPages} 頁，共 ${totalPagesCount} 頁)</div>`, 'output');
+        this.addOutput('<div class="terminal-list-item">', 'output');
+
+        // 顯示頁面列表
+        pagesToShow.forEach((pageItem, index) => {
+            const globalIndex = startIndex + index + 1;
+            const pageLine = `<div><span class="highlight">[${globalIndex}]</span> ${pageItem.title} - ${pageItem.slug} <span class="terminal-text-dim">(${pageItem.published})</span></div>`;
+            this.addOutput(pageLine, 'output');
+        });
+
+        this.addOutput('</div>', 'output');
+
+        // 顯示導航提示
+        if (totalPages > 1) {
+            let navText = '<div class="terminal-list-item terminal-text-muted">';
+            if (page > 1) {
+                navText += `上一頁: <span class="highlight">pages ${page - 1}</span>`;
+            }
+            if (page < totalPages) {
+                if (page > 1) navText += ' | ';
+                navText += `下一頁: <span class="highlight">pages ${page + 1}</span>`;
+            }
+            navText += '</div>';
+            this.addOutput(navText, 'output');
+        }
+
+        this.addOutput('<div class="terminal-list-item terminal-text-muted">輸入 <span class="highlight">page [slug]</span> 或 <span class="highlight">page [編號]</span> 開啟頁面</div>', 'output');
+    }
+
+    openPage(index) {
+        if (!pagesData || !pagesData.pages || pagesData.pages.length === 0) {
+            this.addOutput('目前沒有頁面', 'error');
+            return;
+        }
+
+        // 驗證編號
+        if (isNaN(index) || index < 1 || index > pagesData.pages.length) {
+            this.addOutput(`編號無效。請輸入 1 到 ${pagesData.pages.length} 之間的數字`, 'error');
+            return;
+        }
+
+        const page = pagesData.pages[index - 1];
+        this.addOutput(`正在開啟頁面 [${index}] ${page.title}... <span class="success">✓</span>`, 'output');
+
+        setTimeout(() => {
+            window.open(page.link, '_blank');
+        }, 100);
+    }
+
+    openPageBySlug(slug) {
+        if (!pagesData || !pagesData.pages || pagesData.pages.length === 0) {
+            this.addOutput('目前沒有頁面', 'error');
+            return;
+        }
+
+        // 根據 slug 查找頁面
+        const page = pagesData.pages.find(p => p.slug === slug);
+
+        if (!page) {
+            this.addOutput(`找不到 slug 為 "${slug}" 的頁面`, 'error');
+            return;
+        }
+
+        // 顯示頁面資訊
+        this.addOutput(`<div class="highlight">找到頁面：</div>`, 'output');
+        this.addOutput(`<div class="terminal-list-item">標題: ${page.title}</div>`, 'output');
+        this.addOutput(`<div>發布日期: ${page.published}</div>`, 'output');
+        this.addOutput(`<div>連結: <span class="terminal-link">${page.link}</span></div>`, 'output');
+
+        // 設定等待確認狀態
+        this.pendingAction = {
+            title: page.title,
+            url: page.link
+        };
+
+        // 切換到確認模式
+        this.setConfirmationMode(`是否開啟「${page.title}」？`);
     }
 }
 
