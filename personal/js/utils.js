@@ -26,7 +26,7 @@ function debounce(func, wait) {
  */
 function throttle(func, limit) {
   let inThrottle;
-  return function(...args) {
+  return function (...args) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -79,4 +79,21 @@ function getScrollPosition() {
  */
 function hasScrolledPast(threshold) {
   return getScrollPosition() > threshold;
+}
+
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {string} text - The text to escape
+ * @returns {string} The escaped text
+ */
+function escapeHtml(text) {
+  if (!text) return text;
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.toString().replace(/[&<>"']/g, function (m) { return map[m]; });
 }

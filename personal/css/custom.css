@@ -1,0 +1,87 @@
+/* Custom Styles for Inline Migration */
+
+.hero-title {
+    font-size: var(--font-size-5xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+.text-primary {
+    color: var(--text-primary);
+}
+
+.text-accent {
+    color: var(--text-accent);
+}
+
+.about-text {
+    font-size: var(--font-size-lg);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.flex-col-gap-xl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.experience-company {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.highlight-accent {
+    color: var(--text-accent);
+    font-weight: var(--font-weight-bold);
+}
+
+.portfolio-img {
+    width: 100%;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.mt-md {
+    margin-top: var(--spacing-md);
+}
+
+.flex-gap-md {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.contact-intro {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.icon-accent {
+    stroke: var(--text-accent);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--border-primary);
+    margin: var(--spacing-xl) 0;
+}

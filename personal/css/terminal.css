@@ -147,8 +147,16 @@
 }
 
 @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
 }
 
 .highlight {
@@ -238,8 +246,12 @@
 }
 
 .terminal-section-title {
-    margin-top: 0.5rem; 
-    font-family: 'Courier New', monospace; 
-    white-space: pre; 
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+    white-space: pre;
     line-height: 1.8;
+}
+
+.terminal-completion-item {
+    color: #fb923c;
 }
