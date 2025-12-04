@@ -125,13 +125,21 @@
           <span class="text-accent">Chen</span>
         </h1>
 
+        <!-- Terminal Launcher -->
+        <!-- Terminal Launcher -->
+        <div class="terminal-launcher" id="terminal-launcher">
+          <span class="launcher-icon">>_ </span>
+          <span class="launcher-text" id="launcher-text"></span>
+          <span class="cursor"></span>
+        </div>
+
         <!-- Terminal -->
-        <div class="terminal-container">
+        <div class="terminal-container" style="display: none;">
           <div class="terminal-header">
             <div class="terminal-dots">
-              <div class="terminal-dot red"></div>
-              <div class="terminal-dot yellow"></div>
-              <div class="terminal-dot green"></div>
+              <div class="terminal-dot red" id="terminal-close" title="關閉"></div>
+              <div class="terminal-dot yellow" id="terminal-minimize" title="最小化"></div>
+              <div class="terminal-dot green" id="terminal-expand" title="展開"></div>
             </div>
             <div class="terminal-title">frankchentw@terminal ~ %</div>
           </div>

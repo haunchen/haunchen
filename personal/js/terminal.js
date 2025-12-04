@@ -67,6 +67,84 @@ class TerminalEmulator {
 
         // 初始歡迎訊息
         this.showWelcome();
+
+        // 綁定開關事件
+        this.bindEvents();
+
+        // 強制初始狀態
+        const container = document.querySelector('.terminal-container');
+        const launcher = document.getElementById('terminal-launcher');
+        if (container && launcher) {
+            container.style.display = 'none';
+            launcher.style.display = 'flex';
+
+            // 啟動打字效果
+            this.typeLauncherText();
+        }
+    }
+
+    typeLauncherText() {
+        const textElement = document.getElementById('launcher-text');
+        if (!textElement) return;
+
+        const text = '開啟終端機';
+        let index = 0;
+        textElement.textContent = '';
+
+        const type = () => {
+            if (index < text.length) {
+                textElement.textContent += text.charAt(index);
+                index++;
+                setTimeout(type, 150); // 打字速度
+            }
+        };
+
+        // 延遲一點開始打字，讓使用者注意到
+        setTimeout(type, 300);
+    }
+
+    bindEvents() {
+        const launcher = document.getElementById('terminal-launcher');
+        const closeBtn = document.getElementById('terminal-close');
+        const container = document.querySelector('.terminal-container');
+
+        if (launcher) {
+            launcher.addEventListener('click', () => this.openTerminal());
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeTerminal());
+        }
+    }
+
+    openTerminal() {
+        const launcher = document.getElementById('terminal-launcher');
+        const container = document.querySelector('.terminal-container');
+
+        if (launcher && container) {
+            launcher.style.display = 'none';
+            container.style.display = 'block';
+            container.classList.remove('closing');
+            container.classList.add('open');
+            this.input.focus();
+        }
+    }
+
+    closeTerminal() {
+        const launcher = document.getElementById('terminal-launcher');
+        const container = document.querySelector('.terminal-container');
+
+        if (launcher && container) {
+            container.classList.remove('open');
+            container.classList.add('closing');
+
+            // 等待動畫結束後隱藏
+            setTimeout(() => {
+                container.style.display = 'none';
+                launcher.style.display = 'flex';
+                container.classList.remove('closing');
+            }, 300); // 對應 CSS 動畫時間
+        }
     }
 
     handleKeydown(e) {
