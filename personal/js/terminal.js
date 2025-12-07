@@ -32,7 +32,9 @@ class TerminalEmulator {
             'github': this.openGithub.bind(this),
             'clear': this.clearScreen.bind(this),
             'welcome': this.showWelcome.bind(this),
-            'pages': this.showPages.bind(this)
+            'welcome': this.showWelcome.bind(this),
+            'pages': this.showPages.bind(this),
+            'posts': this.showPosts.bind(this)
         };
 
         this.init();
@@ -200,31 +202,33 @@ class TerminalEmulator {
         const mainCommand = parts[0];
         const args = parts.slice(1);
 
-        // 處理 posts 指令
-        if (mainCommand === 'posts') {
-            const page = args[0] ? parseInt(args[0]) : 1;
-            this.showPosts(page);
-            return;
-        }
 
-        // 處理 post [slug] 指令
+
+        // 處理 post [slug] 或 post [編號] 指令
         if (mainCommand === 'post' && args.length > 0) {
-            const slug = args[0];
-            this.openPostBySlug(slug);
+            const arg = args[0];
+            if (!isNaN(arg)) {
+                this.openPost(parseInt(arg));
+            } else {
+                this.openPostBySlug(arg);
+            }
             return;
         }
 
         // 處理 pages 指令
         if (mainCommand === 'pages') {
-            const page = args[0] ? parseInt(args[0]) : 1;
-            this.showPages(page);
+            this.showPages();
             return;
         }
 
-        // 處理 page [slug] 指令
+        // 處理 page [slug] 或 page [編號] 指令
         if (mainCommand === 'page' && args.length > 0) {
-            const slug = args[0];
-            this.openPageBySlug(slug);
+            const arg = args[0];
+            if (!isNaN(arg)) {
+                this.openPage(parseInt(arg));
+            } else {
+                this.openPageBySlug(arg);
+            }
             return;
         }
 
@@ -402,8 +406,7 @@ class TerminalEmulator {
 <div><span class="highlight">experience</span> - 工作經歷</div>
 <div><span class="highlight">projects</span>   - 專案作品</div>
 <div><span class="highlight">contact</span>    - 聯絡資訊</div>
-<div><span class="highlight">posts</span>      - 顯示部落格文章列表</div>
-<div><span class="highlight">posts [頁碼]</span> - 顯示指定頁面的文章</div>
+<div><span class="highlight">posts</span>      - 顯示最新部落格文章列表</div>
 <div><span class="highlight">post [slug]</span> - 用 slug 開啟文章（會先詢問）</div>
 <div><span class="highlight">blog</span>       - 前往部落格</div>
 <div><span class="highlight">github</span>     - 前往 GitHub</div>
@@ -490,34 +493,23 @@ class TerminalEmulator {
         this.showWelcome();
     }
 
-    showPosts(page = 1) {
+    showPosts() {
         if (!postsData || !postsData.posts || postsData.posts.length === 0) {
             this.addOutput('目前沒有文章', 'error');
             return;
         }
 
-        const totalPosts = postsData.posts.length;
-        const totalPages = Math.ceil(totalPosts / this.postsPerPage);
-
-        // 驗證頁碼
-        if (page < 1 || page > totalPages) {
-            this.addOutput(`頁碼超出範圍。共有 ${totalPages} 頁`, 'error');
-            return;
-        }
-
-        const startIndex = (page - 1) * this.postsPerPage;
-        const endIndex = Math.min(startIndex + this.postsPerPage, totalPosts);
-        const postsToShow = postsData.posts.slice(startIndex, endIndex);
+        // 只取最新的 10 篇文章
+        const recentPosts = postsData.posts.slice(0, 10);
+        const totalPosts = recentPosts.length;
 
         // 顯示標題
-        this.addOutput(`<div class="highlight">部落格文章列表 (第 ${page}/${totalPages} 頁，共 ${totalPosts} 篇)</div>`, 'output', true);
+        this.addOutput(`<div class="highlight">最新部落格文章列表 (顯示前 ${totalPosts} 篇)</div>`, 'output', true);
         this.addOutput('<div class="terminal-list-item">', 'output', true);
 
         // 顯示文章列表
-        // 註：postsData.posts 已按 WordPress ID 降序排列（ID 越大越新）
-        // 因此編號 1 對應陣列索引 0（最新文章）
-        postsToShow.forEach((post, index) => {
-            const globalIndex = startIndex + index + 1;
+        recentPosts.forEach((post, index) => {
+            const globalIndex = index + 1;
             const safeTitle = escapeHtml(post.title);
             const safeSlug = escapeHtml(post.slug);
             const postLine = `<div><span class="highlight">[${globalIndex}]</span> ${safeTitle} - ${safeSlug} <span class="terminal-text-dim">(${post.published})</span></div>`;
@@ -525,24 +517,7 @@ class TerminalEmulator {
         });
 
         this.addOutput('</div>', 'output', true);
-
-        // 顯示導航提示
-        if (totalPages > 1) {
-            let navText = '<div class="terminal-list-item terminal-text-muted">';
-            if (page > 1) {
-                navText += `上一頁: <span class="highlight">posts ${page - 1}</span>`;
-            }
-            if (page < totalPages) {
-                if (page > 1) navText += ' | ';
-                navText += `下一頁: <span class="highlight">posts ${page + 1}</span>`;
-            }
-            navText += '</div>';
-            this.addOutput(navText, 'output', true);
-        }
-
-        this.addOutput('<div class="terminal-list-item terminal-text-muted">輸入 <span class="highlight">open [編號]</span> 或直接輸入 <span class="highlight">[編號]</span> 開啟文章</div>', 'output', true);
-
-        this.currentPage = page;
+        this.addOutput('<div class="terminal-list-item terminal-text-muted">輸入 <span class="highlight">post [slug]</span> 或 <span class="highlight">post [編號]</span> 開啟文章</div>', 'output', true);
     }
 
     openPost(index) {
@@ -598,32 +573,21 @@ class TerminalEmulator {
         this.setConfirmationMode(`是否開啟「${post.title}」？`);
     }
 
-    showPages(page = 1) {
+    showPages() {
         if (!pagesData || !pagesData.pages || pagesData.pages.length === 0) {
             this.addOutput('目前沒有頁面', 'error');
             return;
         }
 
         const totalPagesCount = pagesData.pages.length;
-        const totalPages = Math.ceil(totalPagesCount / this.postsPerPage);
-
-        // 驗證頁碼
-        if (page < 1 || page > totalPages) {
-            this.addOutput(`頁碼超出範圍。共有 ${totalPages} 頁`, 'error');
-            return;
-        }
-
-        const startIndex = (page - 1) * this.postsPerPage;
-        const endIndex = Math.min(startIndex + this.postsPerPage, totalPagesCount);
-        const pagesToShow = pagesData.pages.slice(startIndex, endIndex);
 
         // 顯示標題
-        this.addOutput(`<div class="highlight">頁面列表 (第 ${page}/${totalPages} 頁，共 ${totalPagesCount} 頁)</div>`, 'output', true);
+        this.addOutput(`<div class="highlight">頁面列表 (共 ${totalPagesCount} 頁)</div>`, 'output', true);
         this.addOutput('<div class="terminal-list-item">', 'output', true);
 
         // 顯示頁面列表
-        pagesToShow.forEach((pageItem, index) => {
-            const globalIndex = startIndex + index + 1;
+        pagesData.pages.forEach((pageItem, index) => {
+            const globalIndex = index + 1;
             const safeTitle = escapeHtml(pageItem.title);
             const safeSlug = escapeHtml(pageItem.slug);
             const pageLine = `<div><span class="highlight">[${globalIndex}]</span> ${safeTitle} - ${safeSlug} <span class="terminal-text-dim">(${pageItem.published})</span></div>`;
@@ -631,21 +595,6 @@ class TerminalEmulator {
         });
 
         this.addOutput('</div>', 'output', true);
-
-        // 顯示導航提示
-        if (totalPages > 1) {
-            let navText = '<div class="terminal-list-item terminal-text-muted">';
-            if (page > 1) {
-                navText += `上一頁: <span class="highlight">pages ${page - 1}</span>`;
-            }
-            if (page < totalPages) {
-                if (page > 1) navText += ' | ';
-                navText += `下一頁: <span class="highlight">pages ${page + 1}</span>`;
-            }
-            navText += '</div>';
-            this.addOutput(navText, 'output', true);
-        }
-
         this.addOutput('<div class="terminal-list-item terminal-text-muted">輸入 <span class="highlight">page [slug]</span> 或 <span class="highlight">page [編號]</span> 開啟頁面</div>', 'output', true);
     }
 
