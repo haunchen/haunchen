@@ -378,7 +378,8 @@ class TerminalEmulator {
 
         for (let i = 0; i < items.length; i++) {
             // 填充空格使每個項目等寬
-            const paddedItem = items[i].padEnd(columnWidth, ' ');
+            const safeItem = escapeHtml(items[i]);
+            const paddedItem = safeItem.padEnd(columnWidth, ' ');
             output += `<span class="terminal-completion-item">${paddedItem}</span>`;
 
             // 換行處理
