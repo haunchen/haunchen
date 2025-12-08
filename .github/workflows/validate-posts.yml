@@ -65,13 +65,13 @@ jobs:
           });
           console.log('✓ URL 格式正確');
 
-          // 驗證 6: 排序正確性（按 ID 降序）
+          // 驗證 6: 排序正確性（按發布日期降序）
           for (let i = 1; i < postsData.posts.length; i++) {
-            if (postsData.posts[i].id > postsData.posts[i-1].id) {
-              throw new Error(`排序錯誤：文章 ${i} 的 ID (${postsData.posts[i].id}) 比前一篇 (${postsData.posts[i-1].id}) 大`);
+            if (postsData.posts[i].published > postsData.posts[i-1].published) {
+              throw new Error(`排序錯誤：文章 ${i} 的發布日期 (${postsData.posts[i].published}) 比前一篇 (${postsData.posts[i-1].published}) 新`);
             }
           }
-          console.log('✓ 文章按 ID 降序排列（WordPress ID 越大越新）');
+          console.log('✓ 文章按發布日期降序排列');
 
           console.log('\n所有驗證通過！');
           EOF
