@@ -1,0 +1,334 @@
+/* Terminal Component Styles */
+
+.terminal-container {
+    background: #0f172a;
+    border: 2px solid rgba(251, 146, 60, 0.3);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    text-align: left !important;
+    transform-origin: center top;
+    display: none;
+}
+
+.terminal-container.open {
+    display: block;
+    animation: terminalOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.terminal-container.closing {
+    animation: terminalClose 0.3s ease-in forwards;
+}
+
+@keyframes terminalOpen {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes terminalClose {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+}
+
+.terminal-container:hover {
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Terminal Launcher */
+.terminal-launcher {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(251, 146, 60, 0.3);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    margin: 2rem auto;
+    width: fit-content;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.terminal-launcher:hover {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: #fb923c;
+    box-shadow: 0 0 15px rgba(251, 146, 60, 0.2);
+    transform: translateY(-2px);
+}
+
+.launcher-text,
+.launcher-icon {
+    color: #fb923c;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.terminal-dot:hover {
+    transform: scale(1.1);
+}
+
+.terminal-dot.red {
+    background: #ef4444;
+}
+
+.terminal-dot.red:hover {
+    background: #dc2626;
+}
+
+.terminal-dot.yellow {
+    background: #f59e0b;
+}
+
+.terminal-dot.green {
+    background: #10b981;
+}
+
+.terminal-title {
+    flex: 1;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+}
+
+.terminal-output {
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    text-align: left !important;
+}
+
+.terminal-output * {
+    text-align: left !important;
+}
+
+.terminal-output::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-output::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.terminal-output::-webkit-scrollbar-thumb {
+    background: rgba(251, 146, 60, 0.3);
+    border-radius: 4px;
+}
+
+.terminal-output::-webkit-scrollbar-thumb:hover {
+    background: rgba(251, 146, 60, 0.5);
+}
+
+.command {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.5rem;
+}
+
+.output {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+    padding-left: 0;
+}
+
+.prompt {
+    color: #fb923c;
+    font-weight: bold;
+}
+
+.prompt.waiting-confirmation {
+    color: #f59e0b;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+#command-input {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    outline: none;
+    flex: 1;
+    margin-left: 0.5rem;
+    caret-color: transparent;
+}
+
+#command-input::selection {
+    background: rgba(251, 146, 60, 0.3);
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background: #fb923c;
+    margin-left: 4px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.highlight {
+    color: #fb923c;
+    font-weight: bold;
+}
+
+.error {
+    color: #ef4444;
+}
+
+.success {
+    color: #10b981;
+}
+
+.welcome {
+    margin-bottom: 1.5rem;
+    color: #fb923c;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terminal-container {
+        max-width: 100%;
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .terminal-output {
+        font-size: 0.875rem;
+        min-height: 150px;
+        max-height: 300px;
+    }
+
+    #command-input {
+        font-size: 0.875rem;
+    }
+
+    .terminal-title {
+        font-size: 0.75rem;
+    }
+
+    .terminal-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terminal-container {
+        padding: 0.875rem;
+    }
+
+    .terminal-output {
+        font-size: 0.8125rem;
+    }
+
+    #command-input {
+        font-size: 0.8125rem;
+    }
+}
+
+/* Utility Classes for JS Refactoring */
+.terminal-link {
+    color: rgba(251, 146, 60, 0.7);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(251, 146, 60, 0.3);
+    transition: all 0.2s ease;
+}
+
+.terminal-link:hover {
+    color: #fb923c;
+    border-bottom-color: #fb923c;
+}
+
+.terminal-text-muted {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.terminal-text-dim {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.terminal-list-item {
+    margin-top: 0.5rem;
+}
+
+.terminal-section-title {
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+    white-space: pre;
+    line-height: 1.8;
+}
+
+.terminal-completion-item {
+    color: #fb923c;
+}

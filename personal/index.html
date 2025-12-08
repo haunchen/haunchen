@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'self'; form-action 'self'; object-src 'none';">
 
   <!-- Basic Meta Tags -->
   <title>Frank | 系統整合工程師 - 個人簡介</title>
@@ -12,7 +17,8 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="Frank Chen | 系統整合工程師 - 個人簡介">
-  <meta property="og:description" content="Frank Chen 的個人簡介，展示其在系統架構規劃、軟韌體撰寫、電子電路開發、手機應用程式開發及 RESTful API 等領域的豐富經驗與專案成果。">
+  <meta property="og:description"
+    content="Frank Chen 的個人簡介，展示其在系統架構規劃、軟韌體撰寫、電子電路開發、手機應用程式開發及 RESTful API 等領域的豐富經驗與專案成果。">
   <meta property="og:url" content="https://www.frankchen.tw/personal/">
   <meta property="og:site_name" content="Frank Chen 個人簡介">
   <meta property="og:locale" content="zh_TW">
@@ -27,7 +33,8 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Frank Chen | 系統整合工程師 - 個人簡介">
-  <meta name="twitter:description" content="Frank Chen 的個人簡介，展示其在系統架構規劃、軟韌體撰寫、電子電路開發、手機應用程式開發及 RESTful API 等領域的豐富經驗與專案成果。">
+  <meta name="twitter:description"
+    content="Frank Chen 的個人簡介，展示其在系統架構規劃、軟韌體撰寫、電子電路開發、手機應用程式開發及 RESTful API 等領域的豐富經驗與專案成果。">
   <meta name="twitter:image" content="https://www.frankchen.tw/personal/images/cover.webp">
 
   <!-- Icons -->
@@ -44,6 +51,8 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/terminal.css">
+  <link rel="stylesheet" href="css/custom.css">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -87,6 +96,7 @@
   }
   </script>
 </head>
+
 <body>
   <!-- Navigation -->
   <nav class="nav">
@@ -110,33 +120,85 @@
         <div class="avatar">
           <img src="images/frank-avatar.jpeg" alt="Frank Chen 的頭像，一位系統整合工程師" loading="lazy">
         </div>
-        <h1 style="font-size: var(--font-size-5xl); margin-bottom: var(--spacing-lg);">
-          <span style="color: var(--text-primary);">Frank</span>
-          <span style="color: var(--text-accent);">Chen</span>
+        <h1 class="hero-title">
+          <span class="text-primary">Frank</span>
+          <span class="text-accent">Chen</span>
         </h1>
-        <p style="font-size: var(--font-size-xl); color: var(--text-secondary); margin-bottom: var(--spacing-xl); max-width: 48rem; margin-left: auto; margin-right: auto;">
-          系統整合工程師 | 技術愛好者
-        </p>
+
+        <!-- Terminal Launcher -->
+        <!-- Terminal Launcher -->
+        <div class="terminal-launcher" id="terminal-launcher">
+          <span class="launcher-icon">>_ </span>
+          <span class="launcher-text" id="launcher-text"></span>
+          <span class="cursor"></span>
+        </div>
+
+        <!-- Terminal -->
+        <div class="terminal-container" style="display: none;">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot red" id="terminal-close" title="關閉"></div>
+              <div class="terminal-dot yellow" id="terminal-minimize" title="最小化"></div>
+              <div class="terminal-dot green" id="terminal-expand" title="展開"></div>
+            </div>
+            <div class="terminal-title">frankchentw@terminal ~ %</div>
+          </div>
+          <div class="terminal-output" id="terminal-output"></div>
+          <div class="input-line">
+            <span class="prompt" id="terminal-prompt">$ frank</span>
+            <input type="text" id="command-input" autofocus autocomplete="off" placeholder="輸入 help 查看指令">
+            <span class="cursor"></span>
+          </div>
+        </div>
 
         <!-- Social Links -->
         <div class="social-links">
-          <a href="https://www.frankchen.tw/" target="_blank" rel="noopener noreferrer" class="social-link" title="Blog">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8.9 0 1.8.1 2.8.2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7.3 13.7.3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256c0 130.5 106.2 236.6 236.6 236.6 130.5 0 236.6-106.1 236.6-236.6z"/></svg>
+          <a href="https://www.frankchen.tw/" target="_blank" rel="noopener noreferrer" class="social-link"
+            title="Blog">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path
+                d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8.9 0 1.8.1 2.8.2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7.3 13.7.3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256c0 130.5 106.2 236.6 236.6 236.6 130.5 0 236.6-106.1 236.6-236.6z" />
+            </svg>
           </a>
           <a href="linktree.html" class="social-link" title="Podcast">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" x2="12" y1="19" y2="22" />
+            </svg>
           </a>
-          <a href="https://github.com/haunchen" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          <a href="https://github.com/haunchen" target="_blank" rel="noopener noreferrer" class="social-link"
+            title="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+              <path d="M9 18c-4.51 2-5-2-7-2" />
+            </svg>
           </a>
-          <a href="https://www.linkedin.com/in/frankchen0130/" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+          <a href="https://www.linkedin.com/in/frankchen0130/" target="_blank" rel="noopener noreferrer"
+            class="social-link" title="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect width="4" height="12" x="2" y="9" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
           </a>
-          <a href="https://www.threads.com/@frankchen.tw" target="_blank" rel="noopener noreferrer" class="social-link" title="Threads">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512"><path fill="currentColor" d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.8-30.3 143.2c-36.2 36.2-80.3 52.5-142.6 53h-.3c-70.2-.5-124.1-24.1-160.4-70.2c-32.3-41-48.9-98.1-49.5-169.6V256v-.2C17 184.3 33.6 127.2 65.9 86.2C102.2 40.1 156.2 16.5 226.4 16h.3c70.3 .5 124.9 24 162.3 69.9c18.4 22.7 32 50 40.6 81.7l-40.4 10.8c-7.1-25.8-17.8-47.8-32.2-65.4c-29.2-35.8-73-54.2-130.5-54.6c-57 .5-100.1 18.8-128.2 54.4C72.1 146.1 58.5 194.3 58 256c.5 61.7 14.1 109.9 40.3 143.3c28 35.6 71.2 53.9 128.2 54.4c51.4-.4 85.4-12.6 113.7-40.9c32.3-32.2 31.7-71.8 21.4-95.9c-6.1-14.2-17.1-26-31.9-34.9c-3.7 26.9-11.8 48.3-24.7 64.8c-17.1 21.8-41.4 33.6-72.7 35.3c-23.6 1.3-46.3-4.4-63.9-16c-20.8-13.8-33-34.8-34.3-59.3c-2.5-48.3 35.7-83 95.2-86.4c21.1-1.2 40.9-.3 59.2 2.8c-2.4-14.8-7.3-26.6-14.6-35.2c-10-11.7-25.6-17.7-46.2-17.8H227c-16.6 0-39 4.6-53.3 26.3l-34.4-23.6c19.2-29.1 50.3-45.1 87.8-45.1h.8c62.6 .4 99.9 39.5 103.7 107.7l-.2 .2zm-156 68.8c1.3 25.1 28.4 36.8 54.6 35.3c25.6-1.4 54.6-11.4 59.5-73.2c-13.2-2.9-27.8-4.4-43.4-4.4c-4.8 0-9.6 .1-14.4 .4c-42.9 2.4-57.2 23.2-56.2 41.8l-.1 .1z"/></svg>
+          <a href="https://www.threads.com/@frankchen.tw" target="_blank" rel="noopener noreferrer" class="social-link"
+            title="Threads">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512">
+              <path fill="currentColor"
+                d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.8-30.3 143.2c-36.2 36.2-80.3 52.5-142.6 53h-.3c-70.2-.5-124.1-24.1-160.4-70.2c-32.3-41-48.9-98.1-49.5-169.6V256v-.2C17 184.3 33.6 127.2 65.9 86.2C102.2 40.1 156.2 16.5 226.4 16h.3c70.3 .5 124.9 24 162.3 69.9c18.4 22.7 32 50 40.6 81.7l-40.4 10.8c-7.1-25.8-17.8-47.8-32.2-65.4c-29.2-35.8-73-54.2-130.5-54.6c-57 .5-100.1 18.8-128.2 54.4C72.1 146.1 58.5 194.3 58 256c.5 61.7 14.1 109.9 40.3 143.3c28 35.6 71.2 53.9 128.2 54.4c51.4-.4 85.4-12.6 113.7-40.9c32.3-32.2 31.7-71.8 21.4-95.9c-6.1-14.2-17.1-26-31.9-34.9c-3.7 26.9-11.8 48.3-24.7 64.8c-17.1 21.8-41.4 33.6-72.7 35.3c-23.6 1.3-46.3-4.4-63.9-16c-20.8-13.8-33-34.8-34.3-59.3c-2.5-48.3 35.7-83 95.2-86.4c21.1-1.2 40.9-.3 59.2 2.8c-2.4-14.8-7.3-26.6-14.6-35.2c-10-11.7-25.6-17.7-46.2-17.8H227c-16.6 0-39 4.6-53.3 26.3l-34.4-23.6c19.2-29.1 50.3-45.1 87.8-45.1h.8c62.6 .4 99.9 39.5 103.7 107.7l-.2 .2zm-156 68.8c1.3 25.1 28.4 36.8 54.6 35.3c25.6-1.4 54.6-11.4 59.5-73.2c-13.2-2.9-27.8-4.4-43.4-4.4c-4.8 0-9.6 .1-14.4 .4c-42.9 2.4-57.2 23.2-56.2 41.8l-.1 .1z" />
+            </svg>
           </a>
-          <a href="https://buymeacoffee.com/frankchentw" target="_blank" rel="noopener noreferrer" class="social-link" title="Buy Me A Coffee">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path fill="currentColor" d="M88 0C74.7 0 64 10.7 64 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C120.5 112.3 128 119.9 128 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C119.5 47.7 112 40.1 112 24c0-13.3-10.7-24-24-24zM32 192c-17.7 0-32 14.3-32 32V416c0 53 43 96 96 96H288c53 0 96-43 96-96h16c61.9 0 112-50.1 112-112s-50.1-112-112-112H352 32zm352 64h16c26.5 0 48 21.5 48 48s-21.5 48-48 48H384V256zM224 24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C232.5 112.3 240 119.9 240 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C231.5 47.7 224 40.1 224 24z"/></svg>
+          <a href="https://buymeacoffee.com/frankchentw" target="_blank" rel="noopener noreferrer" class="social-link"
+            title="Buy Me A Coffee">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512">
+              <path fill="currentColor"
+                d="M88 0C74.7 0 64 10.7 64 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C120.5 112.3 128 119.9 128 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C119.5 47.7 112 40.1 112 24c0-13.3-10.7-24-24-24zM32 192c-17.7 0-32 14.3-32 32V416c0 53 43 96 96 96H288c53 0 96-43 96-96h16c61.9 0 112-50.1 112-112s-50.1-112-112-112H352 32zm352 64h16c26.5 0 48 21.5 48 48s-21.5 48-48 48H384V256zM224 24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C232.5 112.3 240 119.9 240 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C231.5 47.7 224 40.1 224 24z" />
+            </svg>
           </a>
         </div>
       </div>
@@ -146,16 +208,16 @@
     <section id="about" class="section bg-secondary fade-in-section">
       <div class="container">
         <h2 class="section-title">
-          關於<span style="color: var(--text-accent);">我</span>
+          關於<span class="text-accent">我</span>
         </h2>
         <div class="max-w-3xl">
-          <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: var(--spacing-lg);">
+          <p class="about-text">
             我是一位充滿熱忱的系統整合工程師，擁有超過3年的軟體開發經驗。曾領導 5 人團隊完成兩代智慧醫療模擬器的完整開發與商業化，涵蓋軟體、韌體、硬體、App 及後端系統。
           </p>
-          <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: var(--spacing-lg);">
+          <p class="about-text">
             技術棧涵蓋嵌入式系統、移動端開發與 AI 整合，具備從 0 到 1 的產品開發與團隊協作能力。
           </p>
-          <div class="tags" style="justify-content: center;">
+          <div class="tags justify-center">
             <span class="tag">系統架構規劃</span>
             <span class="tag">電子電路開發</span>
             <span class="tag">系統整合</span>
@@ -170,27 +232,29 @@
     <section id="experience" class="section bg-primary fade-in-section">
       <div class="container">
         <h2 class="section-title">
-          工作<span style="color: var(--text-accent);">經歷</span>
+          工作<span class="text-accent">經歷</span>
         </h2>
-        <div style="display: flex; flex-direction: column; gap: var(--spacing-xl);">
+        <div class="flex-col-gap-xl">
           <!-- Experience 1 -->
           <div class="card">
             <h3 class="card-title">系統整合課長</h3>
-            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-sm);">
+            <p class="experience-company">
               澳門商原妙醫學科技有限公司 台灣分公司
             </p>
             <p class="card-subtitle">2024.09 - 2025.04</p>
             <ul class="list-disc">
-              <li>帶領 5 人<span style="color: var(--text-accent); font-weight: var(--font-weight-bold);">跨領域</span>團隊（硬體/軟體/機構）開發第三代醫療教學模擬器，協調跨部門資源並掌控專案進度，成本相較第二代<span style="color: var(--text-accent); font-weight: var(--font-weight-bold);">降低 30%</span></li>
-              <li>主導邊緣 AI 運算（Hailo）技術導入，解決影像處理不穩定問題，系統穩定度<span style="color: var(--text-accent); font-weight: var(--font-weight-bold);">提升 50%</span>，大幅改善用戶體驗</li>
-              <li>優化硬體架構，以樹莓派 5 取代外購模組，在維持相同效能下單一<span style="color: var(--text-accent); font-weight: var(--font-weight-bold);">成本減少 80%</span>，顯著提升產品競爭力</li>
+              <li>帶領 5 人<span class="highlight-accent">跨領域</span>團隊（硬體/軟體/機構）開發第三代醫療教學模擬器，協調跨部門資源並掌控專案進度，<span
+                  class="highlight-accent">BOM Cost (物料清單成本)</span> 相較第二代降低 30%，同時維持產品效能</li>
+              <li>主導邊緣 AI 運算（Hailo）技術導入，解決影像處理不穩定問題，系統穩定度<span class="highlight-accent">提升 50%</span>，大幅改善用戶體驗</li>
+              <li>優化硬體架構，以樹莓派 5 取代外購模組，在維持相同效能下單一<span class="highlight-accent">成本減少 80%</span>，顯著提升產品競爭力
+              </li>
             </ul>
           </div>
 
           <!-- Experience 2 -->
           <div class="card">
             <h3 class="card-title">軟韌體工程師</h3>
-            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-sm);">
+            <p class="experience-company">
               澳門商原妙醫學科技有限公司 台灣分公司
             </p>
             <p class="card-subtitle">2021.11 - 2024.08</p>
@@ -210,7 +274,7 @@
     <section id="projects" class="section bg-secondary fade-in-section">
       <div class="container">
         <h2 class="section-title">
-          專案<span style="color: var(--text-accent);">經歷</span>
+          專案<span class="text-accent">經歷</span>
         </h2>
         <div class="grid grid-cols-2">
           <!-- Project 1 -->
@@ -228,7 +292,7 @@
               <li>領導 5 人跨領域團隊進行第三代系統開發及改良</li>
               <li>導入邊緣 AI 運算 (Hailo)，影像處理穩定度提升 50%</li>
               <li>導入樹莓派 5，取代前代外購成品功能，保持相同效能情況下，單一成本減少 80%</li>
-              <li>統整前代缺點，引導團隊改良，提供產品體驗</li>
+              <li>統整前代缺點，引導團隊改良，優化使用者體驗 (UX)，解決操作延遲痛點</li>
             </ul>
             <div class="tags">
               <span class="tag">跨團隊溝通及整合</span>
@@ -258,7 +322,7 @@
               <li>建立可重用的零件庫，提升開發效率</li>
               <li>規劃及引導 App 工程師開發專用手機應用程式 (Android / iOS)，並完成雙平台上架</li>
               <li>定義 RESTful API，並使用 Python Flask 實作</li>
-              <li>協助業務端前往國內外展覽進行產品推廣及技術支援</li>
+              <li>擔任技術顧問協助業務推廣，成功於國內外展覽展示產品亮點並獲得潛在客戶</li>
               <li>取得兩項發明專利，並應用於產品中</li>
             </ul>
             <div class="tags">
@@ -279,7 +343,7 @@
               <span class="role">電路設計</span>
             </div>
             <ul class="list-disc">
-              <li>開發電子電路，並將成本控制在1美元內</li>
+              <li>設計高成本效益電路 (Cost-effective circuit design)，成功將 BOM Cost 控制在 1 美元以內，利於大規模量產</li>
               <li>取得 SGS EMI/ESD 測試報告</li>
               <li>取得發明專利及新型專利各一項</li>
             </ul>
@@ -315,12 +379,12 @@
     <section id="portfolio" class="section bg-primary fade-in-section">
       <div class="container">
         <h2 class="section-title">
-          作品<span style="color: var(--text-accent);">集</span>
+          作品<span class="text-accent">集</span>
         </h2>
         <div class="grid grid-cols-2">
           <!-- Portfolio Item 1 -->
           <div class="card">
-            <img src="images/n8n-app-screenshot.png" alt="n8n 管理工具 App" style="width: 100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-md);" loading="lazy">
+            <img src="images/n8n-app-screenshot.png" alt="n8n 管理工具 App" class="portfolio-img" loading="lazy">
             <h3 class="card-title">
               n8n 管理工具 App
               <span class="badge">NEW</span>
@@ -334,8 +398,9 @@
               <span class="tag">Provider</span>
               <span class="tag">MVVM</span>
             </div>
-            <div style="margin-top: var(--spacing-md);">
-              <a href="https://www.frankchen.tw/n8nmanager" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <div class="mt-md">
+              <a href="https://www.frankchen.tw/n8nmanager" target="_blank" rel="noopener noreferrer"
+                class="btn btn-primary">
                 查看專案
               </a>
             </div>
@@ -343,7 +408,7 @@
 
           <!-- Portfolio Item 2 -->
           <div class="card">
-            <img src="images/blog-screenshot.png" alt="法蘭克的技術部落格" style="width: 100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-md);" loading="lazy">
+            <img src="images/blog-screenshot.png" alt="法蘭克的技術部落格" class="portfolio-img" loading="lazy">
             <h3 class="card-title">
               法蘭克的技術部落格
               <span class="badge">NEW</span>
@@ -354,7 +419,7 @@
             <div class="tags">
               <span class="tag">WordPress</span>
             </div>
-            <div style="margin-top: var(--spacing-md);">
+            <div class="mt-md">
               <a href="https://www.frankchen.tw/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
                 查看專案
               </a>
@@ -363,7 +428,7 @@
 
           <!-- Portfolio Item 3 -->
           <div class="card">
-            <img src="images/iset2021-screenshot.png" alt="ISET2021 研討會官方網站" style="width: 100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-md);" loading="lazy">
+            <img src="images/iset2021-screenshot.png" alt="ISET2021 研討會官方網站" class="portfolio-img" loading="lazy">
             <h3 class="card-title">ISET2021 研討會官方網站</h3>
             <p class="card-content">
               沿用ISET2022 研討會官方網站功能，美化及調整細節問題。
@@ -375,8 +440,9 @@
               <span class="tag">Google Sheet</span>
               <span class="tag">Google App Script</span>
             </div>
-            <div style="margin-top: var(--spacing-md); display: flex; gap: var(--spacing-md);">
-              <a href="https://github.com/haunchen/ISET2021" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <div class="mt-md flex-gap-md">
+              <a href="https://github.com/haunchen/ISET2021" target="_blank" rel="noopener noreferrer"
+                class="btn btn-primary">
                 GitHub
               </a>
             </div>
@@ -384,7 +450,7 @@
 
           <!-- Portfolio Item 4 -->
           <div class="card">
-            <img src="images/iset2020-screenshot.png" alt="ISET2020 研討會官方網站" style="width: 100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-md);" loading="lazy">
+            <img src="images/iset2020-screenshot.png" alt="ISET2020 研討會官方網站" class="portfolio-img" loading="lazy">
             <h3 class="card-title">ISET2020 研討會官方網站</h3>
             <p class="card-content">
               碩班時期作品，從零手刻網站，利用大學所學之技能完成指定功能。 網站提供報名及繳費功能，接串接現有服務；報名系統串接 Google Sheet 作為資料庫，搭合 Google App Script 完成功能。
@@ -396,8 +462,9 @@
               <span class="tag">Google Sheet</span>
               <span class="tag">Google App Script</span>
             </div>
-            <div style="margin-top: var(--spacing-md); display: flex; gap: var(--spacing-md);">
-              <a href="https://github.com/haunchen/ISET2020" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <div class="mt-md flex-gap-md">
+              <a href="https://github.com/haunchen/ISET2020" target="_blank" rel="noopener noreferrer"
+                class="btn btn-primary">
                 GitHub
               </a>
             </div>
@@ -410,49 +477,91 @@
     <section id="contact" class="section bg-secondary fade-in-section">
       <div class="container">
         <h2 class="section-title">
-          聯絡<span style="color: var(--text-accent);">我</span>
+          聯絡<span class="text-accent">我</span>
         </h2>
         <div class="max-w-3xl">
-          <p style="color: var(--text-secondary); margin-bottom: var(--spacing-xl);">
+          <p class="contact-intro">
             如果您有任何專案想法或合作機會，歡迎隨時與我聯繫。我很樂意討論如何協助您實現目標。
           </p>
-          <div style="display: flex; flex-direction: column; gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
-            <div style="display: flex; align-items: center; gap: var(--spacing-md);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              <span style="color: var(--text-secondary);">
+          <div class="contact-list">
+            <div class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                class="icon-accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              <span class="text-secondary">
                 <a href="mailto:qwer4488999@gmail.com" class="link-underline">qwer4488999@gmail.com</a>
               </span>
             </div>
-            <div style="display: flex; align-items: center; gap: var(--spacing-md);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <span style="color: var(--text-secondary);">
-                <a href="https://www.frankchen.tw/contact-frank/" target="_blank" rel="noopener noreferrer" class="link-underline">點擊前往填寫表單</a>
+            <div class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                class="icon-accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              <span class="text-secondary">
+                <a href="https://www.frankchen.tw/contact-frank/" target="_blank" rel="noopener noreferrer"
+                  class="link-underline">點擊前往填寫表單</a>
               </span>
             </div>
-            <div style="display: flex; align-items: center; gap: var(--spacing-md);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span style="color: var(--text-secondary);">台南市, 台灣</span>
+            <div class="contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                class="icon-accent" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span class="text-secondary">台南市, 台灣</span>
             </div>
           </div>
-          <hr style="border: none; border-top: 1px solid var(--border-primary); margin: var(--spacing-xl) 0;">
+          <hr class="divider">
           <div class="social-links">
-            <a href="https://www.frankchen.tw/" target="_blank" rel="noopener noreferrer" class="social-link" title="Blog">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8.9 0 1.8.1 2.8.2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7.3 13.7.3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256c0 130.5 106.2 236.6 236.6 236.6 130.5 0 236.6-106.1 236.6-236.6z"/></svg>
+            <a href="https://www.frankchen.tw/" target="_blank" rel="noopener noreferrer" class="social-link"
+              title="Blog">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M61.7 169.4l101.5 278C92.2 413 43.3 340.2 43.3 256c0-30.9 6.6-60.1 18.4-86.6zm337.9 75.9c0-26.3-9.4-44.5-17.5-58.7-10.8-17.5-20.9-32.4-20.9-49.9 0-19.6 14.8-37.8 35.7-37.8.9 0 1.8.1 2.8.2-37.9-34.7-88.3-55.9-143.7-55.9-74.3 0-139.7 38.1-177.8 95.9 5 .2 9.7.3 13.7.3 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l77.5 230.4L249.8 247l-33.1-90.8c-11.5-.7-22.3-2-22.3-2-11.5-.7-10.1-18.2 1.3-17.5 0 0 35.1 2.7 56 2.7 22.2 0 56.7-2.7 56.7-2.7 11.5-.7 12.8 16.2 1.4 17.5 0 0-11.5 1.3-24.3 2l76.9 228.7 21.2-70.9c9-29.4 16-50.5 16-68.7zm-139.9 29.3l-63.8 185.5c19.1 5.6 39.2 8.7 60.1 8.7 24.8 0 48.5-4.3 70.6-12.1-.6-.9-1.1-1.9-1.5-2.9l-65.4-179.2zm183-120.7c.9 6.8 1.4 14 1.4 21.9 0 21.6-4 45.8-16.2 76.2l-65 187.9C426.2 403 468.7 334.5 468.7 256c0-37-9.4-71.8-26-102.1zM504 256c0 136.8-111.3 248-248 248C119.2 504 8 392.7 8 256 8 119.2 119.2 8 256 8c136.7 0 248 111.2 248 248zm-11.4 0c0-130.5-106.2-236.6-236.6-236.6C125.5 19.4 19.4 125.5 19.4 256c0 130.5 106.2 236.6 236.6 236.6 130.5 0 236.6-106.1 236.6-236.6z" />
+              </svg>
             </a>
             <a href="linktree.html" class="social-link" title="Podcast">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
             </a>
-            <a href="https://github.com/haunchen" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            <a href="https://github.com/haunchen" target="_blank" rel="noopener noreferrer" class="social-link"
+              title="GitHub">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                <path d="M9 18c-4.51 2-5-2-7-2" />
+              </svg>
             </a>
-            <a href="https://www.linkedin.com/in/frankchen0130/" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            <a href="https://www.linkedin.com/in/frankchen0130/" target="_blank" rel="noopener noreferrer"
+              class="social-link" title="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect width="4" height="12" x="2" y="9" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
             </a>
-            <a href="https://www.threads.com/@frankchen.tw" target="_blank" rel="noopener noreferrer" class="social-link" title="Threads">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512"><path fill="currentColor" d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.8-30.3 143.2c-36.2 36.2-80.3 52.5-142.6 53h-.3c-70.2-.5-124.1-24.1-160.4-70.2c-32.3-41-48.9-98.1-49.5-169.6V256v-.2C17 184.3 33.6 127.2 65.9 86.2C102.2 40.1 156.2 16.5 226.4 16h.3c70.3 .5 124.9 24 162.3 69.9c18.4 22.7 32 50 40.6 81.7l-40.4 10.8c-7.1-25.8-17.8-47.8-32.2-65.4c-29.2-35.8-73-54.2-130.5-54.6c-57 .5-100.1 18.8-128.2 54.4C72.1 146.1 58.5 194.3 58 256c.5 61.7 14.1 109.9 40.3 143.3c28 35.6 71.2 53.9 128.2 54.4c51.4-.4 85.4-12.6 113.7-40.9c32.3-32.2 31.7-71.8 21.4-95.9c-6.1-14.2-17.1-26-31.9-34.9c-3.7 26.9-11.8 48.3-24.7 64.8c-17.1 21.8-41.4 33.6-72.7 35.3c-23.6 1.3-46.3-4.4-63.9-16c-20.8-13.8-33-34.8-34.3-59.3c-2.5-48.3 35.7-83 95.2-86.4c21.1-1.2 40.9-.3 59.2 2.8c-2.4-14.8-7.3-26.6-14.6-35.2c-10-11.7-25.6-17.7-46.2-17.8H227c-16.6 0-39 4.6-53.3 26.3l-34.4-23.6c19.2-29.1 50.3-45.1 87.8-45.1h.8c62.6 .4 99.9 39.5 103.7 107.7l-.2 .2zm-156 68.8c1.3 25.1 28.4 36.8 54.6 35.3c25.6-1.4 54.6-11.4 59.5-73.2c-13.2-2.9-27.8-4.4-43.4-4.4c-4.8 0-9.6 .1-14.4 .4c-42.9 2.4-57.2 23.2-56.2 41.8l-.1 .1z"/></svg>
+            <a href="https://www.threads.com/@frankchen.tw" target="_blank" rel="noopener noreferrer"
+              class="social-link" title="Threads">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512">
+                <path fill="currentColor"
+                  d="M331.5 235.7c2.2 .9 4.2 1.9 6.3 2.8c29.2 14.1 50.6 35.2 61.8 61.4c15.7 36.5 17.2 95.8-30.3 143.2c-36.2 36.2-80.3 52.5-142.6 53h-.3c-70.2-.5-124.1-24.1-160.4-70.2c-32.3-41-48.9-98.1-49.5-169.6V256v-.2C17 184.3 33.6 127.2 65.9 86.2C102.2 40.1 156.2 16.5 226.4 16h.3c70.3 .5 124.9 24 162.3 69.9c18.4 22.7 32 50 40.6 81.7l-40.4 10.8c-7.1-25.8-17.8-47.8-32.2-65.4c-29.2-35.8-73-54.2-130.5-54.6c-57 .5-100.1 18.8-128.2 54.4C72.1 146.1 58.5 194.3 58 256c.5 61.7 14.1 109.9 40.3 143.3c28 35.6 71.2 53.9 128.2 54.4c51.4-.4 85.4-12.6 113.7-40.9c32.3-32.2 31.7-71.8 21.4-95.9c-6.1-14.2-17.1-26-31.9-34.9c-3.7 26.9-11.8 48.3-24.7 64.8c-17.1 21.8-41.4 33.6-72.7 35.3c-23.6 1.3-46.3-4.4-63.9-16c-20.8-13.8-33-34.8-34.3-59.3c-2.5-48.3 35.7-83 95.2-86.4c21.1-1.2 40.9-.3 59.2 2.8c-2.4-14.8-7.3-26.6-14.6-35.2c-10-11.7-25.6-17.7-46.2-17.8H227c-16.6 0-39 4.6-53.3 26.3l-34.4-23.6c19.2-29.1 50.3-45.1 87.8-45.1h.8c62.6 .4 99.9 39.5 103.7 107.7l-.2 .2zm-156 68.8c1.3 25.1 28.4 36.8 54.6 35.3c25.6-1.4 54.6-11.4 59.5-73.2c-13.2-2.9-27.8-4.4-43.4-4.4c-4.8 0-9.6 .1-14.4 .4c-42.9 2.4-57.2 23.2-56.2 41.8l-.1 .1z" />
+              </svg>
             </a>
-            <a href="https://buymeacoffee.com/frankchentw" target="_blank" rel="noopener noreferrer" class="social-link" title="Buy Me A Coffee">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path fill="currentColor" d="M88 0C74.7 0 64 10.7 64 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C120.5 112.3 128 119.9 128 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C119.5 47.7 112 40.1 112 24c0-13.3-10.7-24-24-24zM32 192c-17.7 0-32 14.3-32 32V416c0 53 43 96 96 96H288c53 0 96-43 96-96h16c61.9 0 112-50.1 112-112s-50.1-112-112-112H352 32zm352 64h16c26.5 0 48 21.5 48 48s-21.5 48-48 48H384V256zM224 24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C232.5 112.3 240 119.9 240 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C231.5 47.7 224 40.1 224 24z"/></svg>
+            <a href="https://buymeacoffee.com/frankchentw" target="_blank" rel="noopener noreferrer" class="social-link"
+              title="Buy Me A Coffee">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512">
+                <path fill="currentColor"
+                  d="M88 0C74.7 0 64 10.7 64 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C120.5 112.3 128 119.9 128 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C119.5 47.7 112 40.1 112 24c0-13.3-10.7-24-24-24zM32 192c-17.7 0-32 14.3-32 32V416c0 53 43 96 96 96H288c53 0 96-43 96-96h16c61.9 0 112-50.1 112-112s-50.1-112-112-112H352 32zm352 64h16c26.5 0 48 21.5 48 48s-21.5 48-48 48H384V256zM224 24c0-13.3-10.7-24-24-24s-24 10.7-24 24c0 38.9 23.4 59.4 39.1 73.1l1.1 1C232.5 112.3 240 119.9 240 136c0 13.3 10.7 24 24 24s24-10.7 24-24c0-38.9-23.4-59.4-39.1-73.1l-1.1-1C231.5 47.7 224 40.1 224 24z" />
+              </svg>
             </a>
           </div>
         </div>
@@ -467,13 +576,18 @@
 
   <!-- Back to Top Button -->
   <button class="back-to-top" id="backToTop" aria-label="回到頂部">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m18 15-6-6-6 6" />
+    </svg>
   </button>
 
   <!-- Scripts -->
   <script src="js/utils.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/animations.js"></script>
+  <script type="module" src="js/terminal.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
