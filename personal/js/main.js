@@ -14,6 +14,20 @@ class App {
     // Add any global event listeners or initialization code here
     this.setupExternalLinks();
     this.setupImageLoading();
+    this.setupEmailProtection();
+  }
+
+  /**
+   * Setup email protection to prevent harvesting
+   */
+  setupEmailProtection() {
+    document.querySelectorAll('.email-protected').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = `${el.dataset.u}@${el.dataset.d}`;
+        window.location.href = `mailto:${email}`;
+      });
+    });
   }
 
   /**

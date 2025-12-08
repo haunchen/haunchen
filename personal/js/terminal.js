@@ -6,6 +6,23 @@
 import { postsData } from '../data/posts.js';
 import { pagesData } from '../data/pages.js';
 
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {string} text - The text to escape
+ * @returns {string} The escaped text
+ */
+function escapeHtml(text) {
+    if (!text) return text;
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.toString().replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
 class TerminalEmulator {
     constructor(outputElement, inputElement) {
         this.output = outputElement;
@@ -13,6 +30,7 @@ class TerminalEmulator {
         this.promptElement = document.getElementById('terminal-prompt');
         this.commandHistory = [];
         this.historyIndex = -1;
+        this.maxHistoryLength = 100; // 命令歷史上限
 
         // 文章相關設定
         this.postsPerPage = 5;
@@ -170,8 +188,11 @@ class TerminalEmulator {
                     // 執行指令
                     this.executeCommand(command.toLowerCase());
 
-                    // 加入歷史記錄
+                    // 加入歷史記錄並限制長度
                     this.commandHistory.push(this.input.value);
+                    if (this.commandHistory.length > this.maxHistoryLength) {
+                        this.commandHistory.shift(); // 移除最舊記錄
+                    }
                     this.historyIndex = this.commandHistory.length;
                 }
             }
@@ -536,7 +557,8 @@ class TerminalEmulator {
         // 註：postsData.posts 已按 WordPress ID 降序排列
         // 編號 1 = 陣列索引 0 = ID 最大（最新文章）
         const post = postsData.posts[index - 1];
-        this.addOutput(`正在開啟文章 [${index}] ${post.title}... <span class="success">✓</span>`, 'output', true);
+        const safeTitle = escapeHtml(post.title);
+        this.addOutput(`正在開啟文章 [${index}] ${safeTitle}... <span class="success">✓</span>`, 'output', true);
 
         setTimeout(() => {
             this.safeOpen(post.url);
@@ -553,7 +575,8 @@ class TerminalEmulator {
         const post = postsData.posts.find(p => p.slug === slug);
 
         if (!post) {
-            this.addOutput(`找不到 slug 為 "${slug}" 的文章`, 'error');
+            const safeSlug = escapeHtml(slug);
+            this.addOutput(`找不到 slug 為 "${safeSlug}" 的文章`, 'error');
             return;
         }
 
@@ -571,7 +594,7 @@ class TerminalEmulator {
         };
 
         // 切換到確認模式
-        this.setConfirmationMode(`是否開啟「${post.title}」？`);
+        this.setConfirmationMode(`是否開啟「${escapeHtml(post.title)}」？`);
     }
 
     showPages() {
@@ -612,7 +635,8 @@ class TerminalEmulator {
         }
 
         const page = pagesData.pages[index - 1];
-        this.addOutput(`正在開啟頁面 [${index}] ${page.title}... <span class="success">✓</span>`, 'output', true);
+        const safeTitle = escapeHtml(page.title);
+        this.addOutput(`正在開啟頁面 [${index}] ${safeTitle}... <span class="success">✓</span>`, 'output', true);
 
         setTimeout(() => {
             this.safeOpen(page.link);
@@ -629,7 +653,8 @@ class TerminalEmulator {
         const page = pagesData.pages.find(p => p.slug === slug);
 
         if (!page) {
-            this.addOutput(`找不到 slug 為 "${slug}" 的頁面`, 'error');
+            const safeSlug = escapeHtml(slug);
+            this.addOutput(`找不到 slug 為 "${safeSlug}" 的頁面`, 'error');
             return;
         }
 
@@ -647,7 +672,7 @@ class TerminalEmulator {
         };
 
         // 切換到確認模式
-        this.setConfirmationMode(`是否開啟「${page.title}」？`);
+        this.setConfirmationMode(`是否開啟「${escapeHtml(page.title)}」？`);
     }
 }
 

@@ -7,7 +7,10 @@
 
   <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'self'; form-action 'self'; object-src 'none';">
+    content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;">
+
+  <!-- Referrer Policy -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- Basic Meta Tags -->
   <title>Frank | 系統整合工程師 - 個人簡介</title>
@@ -146,7 +149,8 @@
           <div class="terminal-output" id="terminal-output"></div>
           <div class="input-line">
             <span class="prompt" id="terminal-prompt">$ frank</span>
-            <input type="text" id="command-input" autofocus autocomplete="off" placeholder="輸入 help 查看指令">
+            <input type="text" id="command-input" autofocus autocomplete="off" placeholder="輸入 help 查看指令"
+              maxlength="200">
             <span class="cursor"></span>
           </div>
         </div>
@@ -491,7 +495,8 @@
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
               <span class="text-secondary">
-                <a href="mailto:qwer4488999@gmail.com" class="link-underline">qwer4488999@gmail.com</a>
+                <a href="#" class="link-underline email-protected" data-u="qwer4488999"
+                  data-d="gmail.com">qwer4488999@gmail.com</a>
               </span>
             </div>
             <div class="contact-item">
