@@ -45,7 +45,7 @@ haunchen/
 │   ├── animations.js     # 滾動動畫
 │   └── main.js           # 主要邏輯
 ├── images/               # 圖片資源
-│   ├── frank-avatar.jpeg
+│   ├── frank-avatar.png
 │   ├── favicon.png
 │   ├── apple-touch-icon.png
 │   ├── blog-screenshot.png
