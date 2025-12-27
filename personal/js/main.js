@@ -15,6 +15,31 @@ class App {
     this.setupExternalLinks();
     this.setupImageLoading();
     this.setupEmailProtection();
+    this.setupLanguageSwitcher();
+  }
+
+  /**
+   * Setup language switcher functionality
+   */
+  setupLanguageSwitcher() {
+    const currentLang = document.documentElement.lang || 'zh-Hant-TW';
+    const isEnglish = currentLang === 'en';
+
+    // Update active state for language links
+    document.querySelectorAll('.lang-link').forEach(link => {
+      const linkLang = link.dataset.lang;
+      link.classList.toggle('active',
+        (linkLang === 'en' && isEnglish) || (linkLang === 'zh' && !isEnglish)
+      );
+    });
+
+    // Store language preference
+    try {
+      const preferredLang = isEnglish ? 'en' : 'zh-TW';
+      localStorage.setItem('preferred-lang', preferredLang);
+    } catch {
+      // localStorage not available
+    }
   }
 
   /**
