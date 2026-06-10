@@ -53,6 +53,11 @@ System integration engineer with 3+ years of experience, specializing in:
 <img align="center" src="https://github-readme-stats.vercel.app/api?username=haunchen&show_icons=true&locale=en&theme=dark" alt="haunchen" />
 </p>
 
+<h2>🪙 Token Usage</h2>
+<p align="center">
+<img align="center" src="https://tokscale.ai/api/embed/haunchen/svg?compact=1&tokens=compact&cost=compact" alt="haunchen" />
+</p>
+
 <h2 align="left"> 👥 Connect me</h2>
 
 Email: [qwer4488999@gmail.com](mailto:qwer4488999@gmail.com)
